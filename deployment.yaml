@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-api-app
+spec:
+  replicas: 2  # You can adjust the number of replicas as needed
+  selector:
+    matchLabels:
+      app: flask-api-app
+  template:
+    metadata:
+      labels:
+        app: flask-api-app
+    spec:
+      containers:
+        - name: flask-api-app
+          image: 796973476010.dkr.ecr.us-east-1.amazonaws.com/flask-api-app:latest
+          ports:
+            - containerPort: 5000
+          env:
+            - name: FLASK_ENV
+              value: "production"
+            - name: DATABASE_URL
+              value: "postgresql://username:password@db-host:5432/db-name"  # Replace with actual DB details
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+      imagePullSecrets:
+        - name: ecr-secret
