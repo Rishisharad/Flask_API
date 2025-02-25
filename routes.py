@@ -42,9 +42,15 @@ class EmployeeResource(Resource):
         employee = Employee.query.get(emp_id)
         if not employee:
             return jsonify({"error": "Employee not found"}), 404
-        db.session.delete(employee)  # ✅ Delete from database
-        db.session.commit()  # ✅ Save changes
+        db.session.delete(employee)  #Delete from database
+        db.session.commit()  #Save changes
         return jsonify({"message": "Employee deleted"})
+    
+@api_bp.route("/github-webhook/", methods=["POST"])
+def github_webhook():
+    data = request.get_json()
+    print("Received GitHub webhook:", data)  # Logs the payload
+    return jsonify({"message": "Webhook received"}), 200    
 
 api.add_resource(EmployeeResource, "/employees", "/employees/<int:emp_id>")    
 
